@@ -1,5 +1,7 @@
 package com.example.backend.user;
 
+import com.example.backend.global.error.errorcode.ErrorCode;
+import com.example.backend.global.error.exception.CustomException;
 import com.example.backend.user.dto.UserSignupRequestDto;
 import com.example.backend.user.dto.UserSignupResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,14 @@ public class UserService {
 
         //유저 객체 생성
         User user = new User(userSignupRequestDto);
+
+        //이미 가입한 유저인지 검증
+        boolean existName = users.stream().anyMatch(u -> u.getUsername().equals(user.getUsername()));
+
+        //이미 가입한 유저 예외 처리
+        if (existName) {
+            throw new CustomException(ErrorCode.USER_ALREADY_EXISTS);
+        }
 
         //유저 식별자 생성
         user.updateId(idCounter.getAndIncrement());
