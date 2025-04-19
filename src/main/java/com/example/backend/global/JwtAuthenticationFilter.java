@@ -53,7 +53,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 System.out.println("Invalid JWT: " + e.getMessage());
             }
         }
-
         filterChain.doFilter(request, response);
     }
 }
