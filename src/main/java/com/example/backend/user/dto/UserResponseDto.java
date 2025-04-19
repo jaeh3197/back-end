@@ -5,7 +5,7 @@ import com.example.backend.user.User;
 import lombok.Getter;
 
 @Getter
-public class SignupResponseDto {
+public class UserResponseDto {
 
     private String username;
 
@@ -13,13 +13,13 @@ public class SignupResponseDto {
 
     private Role roles;
 
-    public SignupResponseDto(String username, String nickname, Role roles) {
+    public UserResponseDto(String username, String nickname, Role roles) {
         this.username = username;
         this.nickname = nickname;
         this.roles = roles;
     }
 
-    public SignupResponseDto(User user) {
+    public UserResponseDto(User user) {
         this.username = user.getUsername();
         this.nickname = user.getNickname();
         this.roles = user.getRoles();
