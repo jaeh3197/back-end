@@ -10,6 +10,12 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    /* 401 UNAUTHORIZED : 인증되지 않은 사용자 */
+    INVALID_CREDENTIALS(UNAUTHORIZED, "아이디 또는 비밀번호가 올바르지 않습니다."),
+
+    /* 404 NOT_FOUND : Resource 를 찾을 수 없음 */
+    USER_NOT_FOUND(NOT_FOUND, "유저를 찾을 수 없습니다"),
+
     /* 409 CONFLICT : Resource 의 현재 상태와 충돌. 보통 중복된 데이터 존재 */
     USER_ALREADY_EXISTS(CONFLICT,"이미 가입된 사용자입니다.")
     ;

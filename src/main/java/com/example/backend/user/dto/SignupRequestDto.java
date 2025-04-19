@@ -3,7 +3,7 @@ package com.example.backend.user.dto;
 import lombok.Getter;
 
 @Getter
-public class UserSignupRequestDto {
+public class SignupRequestDto {
 
     private String username;
 
@@ -11,7 +11,7 @@ public class UserSignupRequestDto {
 
     private String nickname;
 
-    public UserSignupRequestDto(String username, String password, String nickname) {
+    public SignupRequestDto(String username, String password, String nickname) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
