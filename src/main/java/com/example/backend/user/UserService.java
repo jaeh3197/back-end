@@ -65,6 +65,6 @@ public class UserService {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
-        return new LoginResponseDto(jwtUtil.generateToken(findUser.getUsername()));
+        return new LoginResponseDto(jwtUtil.generateToken(findUser.getUsername(), findUser.getRoles()));
     }
 }
