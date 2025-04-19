@@ -8,6 +8,8 @@ import com.example.backend.user.dto.LoginResponseDto;
 import com.example.backend.user.dto.SignupRequestDto;
 import com.example.backend.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -82,7 +84,20 @@ public class UserService {
         return new LoginResponseDto(jwtUtil.generateToken(findUser.getUsername(), findUser.getRoles()));
     }
 
+    /**
+     * 유저 권한 변경 로직
+     *
+     * @param userId 변경할 유저 식별자
+     * @return
+     */
     public UserResponseDto changeRole(Long userId) {
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getAuthorities().stream()
+                .noneMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
+            throw new CustomException(ErrorCode.ACCESS_DENIED);
+        }
 
         User findUserById = users.stream()
                 .filter(user -> user.getId().equals(userId))
