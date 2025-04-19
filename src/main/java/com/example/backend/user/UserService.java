@@ -6,7 +6,7 @@ import com.example.backend.global.error.exception.CustomException;
 import com.example.backend.user.dto.LoginRequestDto;
 import com.example.backend.user.dto.LoginResponseDto;
 import com.example.backend.user.dto.SignupRequestDto;
-import com.example.backend.user.dto.SignupResponseDto;
+import com.example.backend.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +28,7 @@ public class UserService {
      * @param userSignupRequestDto 유저 생성 정보
      * @return
      */
-    public SignupResponseDto signup(SignupRequestDto userSignupRequestDto) {
+    public UserResponseDto signup(SignupRequestDto userSignupRequestDto) {
 
         //유저 객체 생성
         User user = new User(userSignupRequestDto);
@@ -45,26 +45,52 @@ public class UserService {
         user.updateId(idCounter.getAndIncrement());
 
         //유저 역할 설정
-        user.updateRole(Role.USER);
+        if (userSignupRequestDto.getRole().equals("admin")) {
+            user.updateRole(Role.ADMIN);
+        } else {
+            user.updateRole(Role.USER);
+        }
 
         //메모리에 저장
         users.add(user);
 
-        return new SignupResponseDto(user);
+        return new UserResponseDto(user);
     }
 
+    /**
+     * 로그인 로직
+     *
+     * @param userLoginRequestDto 로그인 정보
+     * @return
+     */
     public LoginResponseDto login(LoginRequestDto userLoginRequestDto) {
 
+        // dto 에서 username 추출
         String username = userLoginRequestDto.getUsername();
+
+        // 메모리에서 username 으로 조회
         User findUser = users.stream()
                 .filter(user -> user.getUsername().equals(username))
                 .findFirst()
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIALS));
 
+        // 비밀번호 검증
         if (!findUser.getPassword().equals(userLoginRequestDto.getPassword())) {
             throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
         }
 
         return new LoginResponseDto(jwtUtil.generateToken(findUser.getUsername(), findUser.getRoles()));
+    }
+
+    public UserResponseDto changeRole(Long userId) {
+
+        User findUserById = users.stream()
+                .filter(user -> user.getId().equals(userId))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        findUserById.updateRole(Role.ADMIN);
+
+        return new UserResponseDto(findUserById);
     }
 }

@@ -3,14 +3,11 @@ package com.example.backend.user;
 import com.example.backend.user.dto.LoginRequestDto;
 import com.example.backend.user.dto.LoginResponseDto;
 import com.example.backend.user.dto.SignupRequestDto;
-import com.example.backend.user.dto.SignupResponseDto;
+import com.example.backend.user.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,11 +23,17 @@ public class UserController {
      * @return
      */
     @PostMapping("/signup")
-    public ResponseEntity<SignupResponseDto> createUser(@RequestBody SignupRequestDto userSignupRequestDto) {
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody SignupRequestDto userSignupRequestDto) {
 
         return new ResponseEntity<>(userService.signup(userSignupRequestDto), HttpStatus.CREATED);
     }
 
+    /**
+     * 로그인 메서드
+     *
+     * @param loginRequestDto 로그인 정보
+     * @return
+     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
 
