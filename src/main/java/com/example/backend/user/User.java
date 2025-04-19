@@ -19,11 +19,12 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String nickname) {
+    public User(Long id, String username, String password, String nickname, Role roles) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.roles = roles;
     }
 
     public User(SignupRequestDto userSignupRequestDto) {
