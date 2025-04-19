@@ -1,7 +1,9 @@
 package com.example.backend.user;
 
-import com.example.backend.user.dto.UserSignupRequestDto;
-import com.example.backend.user.dto.UserSignupResponseDto;
+import com.example.backend.user.dto.LoginRequestDto;
+import com.example.backend.user.dto.LoginResponseDto;
+import com.example.backend.user.dto.SignupRequestDto;
+import com.example.backend.user.dto.SignupResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,8 +26,14 @@ public class UserController {
      * @return
      */
     @PostMapping("/signup")
-    public ResponseEntity<UserSignupResponseDto> createUser(@RequestBody UserSignupRequestDto userSignupRequestDto) {
+    public ResponseEntity<SignupResponseDto> createUser(@RequestBody SignupRequestDto userSignupRequestDto) {
 
         return new ResponseEntity<>(userService.signup(userSignupRequestDto), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
+
+        return new ResponseEntity<>(userService.login(loginRequestDto), HttpStatus.OK);
     }
 }

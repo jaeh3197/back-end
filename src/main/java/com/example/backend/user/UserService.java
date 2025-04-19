@@ -1,9 +1,12 @@
 package com.example.backend.user;
 
+import com.example.backend.global.JwtUtil;
 import com.example.backend.global.error.errorcode.ErrorCode;
 import com.example.backend.global.error.exception.CustomException;
-import com.example.backend.user.dto.UserSignupRequestDto;
-import com.example.backend.user.dto.UserSignupResponseDto;
+import com.example.backend.user.dto.LoginRequestDto;
+import com.example.backend.user.dto.LoginResponseDto;
+import com.example.backend.user.dto.SignupRequestDto;
+import com.example.backend.user.dto.SignupResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final List<User> users = new ArrayList<User>();
+    private static final List<User> users = new ArrayList<User>();
     private final AtomicLong idCounter = new AtomicLong(1);
+    private final JwtUtil jwtUtil;
 
     /**
      * 유저 생성 로직
@@ -24,7 +28,7 @@ public class UserService {
      * @param userSignupRequestDto 유저 생성 정보
      * @return
      */
-    public UserSignupResponseDto signup(UserSignupRequestDto userSignupRequestDto) {
+    public SignupResponseDto signup(SignupRequestDto userSignupRequestDto) {
 
         //유저 객체 생성
         User user = new User(userSignupRequestDto);
@@ -46,6 +50,21 @@ public class UserService {
         //메모리에 저장
         users.add(user);
 
-        return new UserSignupResponseDto(user);
+        return new SignupResponseDto(user);
+    }
+
+    public LoginResponseDto login(LoginRequestDto userLoginRequestDto) {
+
+        String username = userLoginRequestDto.getUsername();
+        User findUser = users.stream()
+                .filter(user -> user.getUsername().equals(username))
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_CREDENTIALS));
+
+        if (!findUser.getPassword().equals(userLoginRequestDto.getPassword())) {
+            throw new CustomException(ErrorCode.INVALID_CREDENTIALS);
+        }
+
+        return new LoginResponseDto(jwtUtil.generateToken(findUser.getUsername()));
     }
 }

@@ -1,6 +1,6 @@
 package com.example.backend.user;
 
-import com.example.backend.user.dto.UserSignupRequestDto;
+import com.example.backend.user.dto.SignupRequestDto;
 import lombok.Getter;
 
 @Getter
@@ -26,7 +26,7 @@ public class User {
         this.nickname = nickname;
     }
 
-    public User(UserSignupRequestDto userSignupRequestDto) {
+    public User(SignupRequestDto userSignupRequestDto) {
         this.username = userSignupRequestDto.getUsername();
         this.password = userSignupRequestDto.getPassword();
         this.nickname = userSignupRequestDto.getNickname();
