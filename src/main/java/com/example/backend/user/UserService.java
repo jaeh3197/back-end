@@ -92,13 +92,16 @@ public class UserService {
      */
     public UserResponseDto changeRole(Long userId) {
 
+        // 로그인 한 유저 권한
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        //관리자 권한이 아닐 경우
         if (authentication.getAuthorities().stream()
                 .noneMatch(auth -> auth.getAuthority().equals("ADMIN"))) {
             throw new CustomException(ErrorCode.ACCESS_DENIED);
         }
 
+        // 권한을 변경할 유저 식별자가 없는 경우
         User findUserById = users.stream()
                 .filter(user -> user.getId().equals(userId))
                 .findFirst()
